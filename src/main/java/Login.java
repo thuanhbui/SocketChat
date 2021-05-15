@@ -46,7 +46,7 @@ public class Login {
             Chat chat = new Chat(client);
             client.login();
             JFrame frame_ = new JFrame("Chatting");
-            chat.panel1.setPreferredSize(new Dimension(350, 450));
+            //chat.panel1.setPreferredSize(new Dimension(350, 450));
             frame_.getContentPane().add(chat.panel1);
             frame_.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame_.pack();
@@ -73,7 +73,7 @@ public class Login {
 
         Login login = new Login();
 
-        login.panel1.setPreferredSize(new Dimension(300, 450));
+        //login.panel1.setPreferredSize(new Dimension(300, 450));
 
         frame.setContentPane(login.panel1);
 
