@@ -32,7 +32,6 @@ public class Server extends Thread {
                 System.out.println("Accepted connection from " + clientSocket);
                 ServerWorker worker = new ServerWorker(this, clientSocket);
                 workers.add(worker);
-                System.out.println(workers.size());
                 worker.start();
             }
         } catch (IOException e) {

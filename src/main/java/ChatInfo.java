@@ -26,4 +26,8 @@ public class ChatInfo {
         return model;
     }
 
+    public void setModel(DefaultListModel model) {
+        this.model = model;
+    }
+
 }

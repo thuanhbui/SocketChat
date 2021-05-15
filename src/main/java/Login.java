@@ -17,6 +17,7 @@ public class Login {
     private JPanel panel1;
     private JPasswordField password;
     private JButton loginButton;
+    private JLabel loginResponse;
 
     public static JFrame frame = new JFrame("Login");
 
@@ -44,28 +45,31 @@ public class Login {
         client.connect();
         try {
             Chat chat = new Chat(client);
-            client.login();
-            JFrame frame_ = new JFrame("Chatting");
-            //chat.panel1.setPreferredSize(new Dimension(350, 450));
-            frame_.getContentPane().add(chat.panel1);
-            frame_.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame_.pack();
-            frame_.setVisible(true);
-            frame.setVisible(false);
+            if (client.login()) {
 
-            frame_.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    super.windowClosing(e);
-                    client.logout();
-                }
-            });
+                //client.login();
+                JFrame frame_ = new JFrame("Chatting");
+                frame_.getContentPane().add(chat.panel1);
+                frame_.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame_.pack();
+                frame_.setVisible(true);
+                frame.setVisible(false);
 
+                frame_.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        System.out.println("ow kia");
+                        super.windowClosing(e);
+                        client.logout();
+                    }
+                });
+            } else {
+                loginResponse.setText("You're already logged in!");
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 

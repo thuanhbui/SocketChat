@@ -45,7 +45,6 @@ public class ServerWorker extends Thread {
                     String[] tokensMsg = StringUtils.split(line, null, 3);
                     handleMessage(tokensMsg);
                 } else if ("connect".equalsIgnoreCase(cmd)) {
-                    System.out.println(token[1]);
                     handleConnectRequest(token);
                 } else {
                     String msg = "unknown " + cmd + "\n";
@@ -66,7 +65,6 @@ public class ServerWorker extends Thread {
         List<ServerWorker> workers = server.getWorkerList();
         for (ServerWorker worker : workers) {
             if (sendTo.equalsIgnoreCase(worker.getUsername())) {
-                System.out.println(username);
                 String msg = "message " + username + ": " + body + "\n";
                 worker.send(msg);
             }
@@ -119,6 +117,7 @@ public class ServerWorker extends Thread {
                         worker.send(onlMsg);
                     }
                 }
+
             } else {
                 msg = "error login: you're already logged in!\n";
                 outputStream.write(msg.getBytes());
@@ -145,10 +144,11 @@ public class ServerWorker extends Thread {
                         worker.send(onlMsg);
                     }
                 }
+                //this.clientSocket.close();
                 server.removeWorker(this);
 
             } else {
-                msg = "error login\n";
+                msg = "error logout\n";
                 outputStream.write(msg.getBytes());
                 System.err.println("Logout failed for " + logout);
             }

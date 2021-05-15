@@ -3,7 +3,6 @@ package client;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -107,6 +106,11 @@ public class Client {
 
     public void message(String sendTo, String body) throws IOException {
         String cmd = "message " + sendTo + " " + body + "\n";
+        serverOut.write(cmd.getBytes());
+    }
+
+    public void messageObject(String sendTo, String body) throws IOException {
+        String cmd = "messageObject " + sendTo + " " + body + "\n";
         serverOut.write(cmd.getBytes());
     }
 

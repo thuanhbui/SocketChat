@@ -1,7 +1,5 @@
-import client.Client;
-import client.ConnectRequestListener;
-import client.MessageListener;
-import client.UserStatusListener;
+import client.*;
+import org.apache.commons.lang3.StringUtils;
 import server.ServerMain;
 
 import javax.swing.*;
@@ -43,15 +41,7 @@ public class Chat extends JPanel implements UserStatusListener, MessageListener,
                 if (e.getClickCount() >= 1) {
                     String login = (String) onlineUsers.getSelectedValue();
                     if (login != null) {
-                        if (isConnected(login)) {
-                            System.out.println("connected");
-                            message.setModel(getChatInfo(login).getModel());
-                        } else {
-                            System.out.println("not connect");
-                            //getClient().requestConnect(login);
-                            chatInfoArrayList.add(new ChatInfo(getClient(), login));
-                            message.setModel(getChatInfo(login).getModel());
-                        }
+                        chatWith(login);
                     }
                 }
             }
@@ -63,26 +53,56 @@ public class Chat extends JPanel implements UserStatusListener, MessageListener,
                 try {
                     String login = (String) onlineUsers.getSelectedValue();
                     String text = messageField.getText();
-                    getClient().message(login, text);
-                    getChatInfo(login).getModel().addElement("You: " + text);
-                    messageField.setText("");
+                    if (!text.equalsIgnoreCase("")) {
+                        getClient().message(login, text);
+                        getChatInfo(login).getModel().addElement("You: " + text);
+                        messageField.setText("");
+                    }
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
             }
         });
 
+        sendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String login = (String) onlineUsers.getSelectedValue();
+                    String text = messageField.getText();
+                    if (!text.equalsIgnoreCase("")) {
+                        getClient().message(login, text);
+                        getChatInfo(login).getModel().addElement("You: " + text);
+                        messageField.setText("");
+                    }
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
     }
 
+    public void chatWith(String login) {
+        if (!isConnected(login)) {
+            chatInfoArrayList.add(new ChatInfo(getClient(), login));
+        }
+        message.setModel(getChatInfo(login).getModel());
+    }
 
     @Override
     public void online(String username) {
         model.addElement(username);
+        onlineUsers.setSelectedIndex(0);
+        chatWith((String) onlineUsers.getSelectedValue());
     }
 
     @Override
     public void offline(String username) {
         model.removeElement(username);
+        if (model.size() > 0) {
+            onlineUsers.setSelectedIndex(0);
+            chatWith((String) onlineUsers.getSelectedValue());
+        }
     }
 
 
@@ -122,9 +142,14 @@ public class Chat extends JPanel implements UserStatusListener, MessageListener,
         return client;
     }
 
+    public ArrayList<ChatInfo> getChatInfoArrayList() {
+        return chatInfoArrayList;
+    }
+
     @Override
     public void acceptConnect(String username) {
         chatInfoArrayList.add(new ChatInfo(client, username));
         message.setModel(getChatInfo(username).getModel());
     }
+
 }
